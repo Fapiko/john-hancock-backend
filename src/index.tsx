@@ -4,61 +4,34 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter, Link as RouterLink, Route, Routes} from "react-router-dom";
-import { SignUp } from "./routes/signup";
-import {AppBar, CssBaseline, GlobalStyles, ThemeProvider, Toolbar} from "@mui/material";
+import { SignUp } from "./components/signup";
+import {CssBaseline, GlobalStyles, ThemeProvider} from "@mui/material";
 import {createTheme} from "@mui/material/styles";
-import Typography from "@mui/material/Typography";
-
-import Button from "@mui/material/Button";
-import Link from "@mui/material/Link";
-import {Login} from "./routes/login";
+import Login from "./components/login";
+import {Provider} from "react-redux";
+import store from './redux/store';
+import Navbar from "./components/navbar";
 
 const theme = createTheme();
 
 ReactDOM.render(
   <React.StrictMode>
-      <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <BrowserRouter>
-              <GlobalStyles styles={{ ul: { margin: 0, padding: 0, listStyle: 'none' } }} />
+      <Provider store={store}>
+          <ThemeProvider theme={theme}>
               <CssBaseline />
-              <AppBar position="static"
-                      color="default"
-                      elevation={0}
-                      sx={{ borderBottom: (theme) => `1px solid ${theme.palette.divider}` }}>
-                  <Toolbar sx={{ flexWrap: 'wrap' }}>
-                      <Link component={RouterLink} underline="none" color="text.primary" to="/" noWrap sx={{ flexGrow: 1 }}>
-                          <Typography variant="h6" color="inherit" >
-                              John Hancock
-                          </Typography>
-                      </Link>
-                      <nav>
-                          <Button
-                              variant="outlined"
-                              component={RouterLink}
-                              to="/users/login"
-                              sx={{ my: 1, mx: 1.5 }}
-                          >
-                              Login
-                          </Button>
-                          <Button
-                              component={RouterLink}
-                              variant="outlined"
-                                to="/users/signup"
-                                sx={{ my: 1, mx: 1.5 }}>
-                              Sign up
-                          </Button>
-                      </nav>
-                  </Toolbar>
-              </AppBar>
+              <BrowserRouter>
+                  <GlobalStyles styles={{ ul: { margin: 0, padding: 0, listStyle: 'none' } }} />
+                  <CssBaseline />
+                  <Navbar />
 
-              <Routes>
-                  <Route path="/" element={<App />} />
-                  <Route path='users/login' element={<Login />} />
-                  <Route path="users/signup" element={<SignUp />} />
-              </Routes>
-          </BrowserRouter>
-      </ThemeProvider>
+                  <Routes>
+                      <Route path="/" element={<App />} />
+                      <Route path='users/login' element={<Login />} />
+                      <Route path="users/signup" element={<SignUp />} />
+                  </Routes>
+              </BrowserRouter>
+          </ThemeProvider>
+      </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );

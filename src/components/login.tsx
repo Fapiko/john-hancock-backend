@@ -8,13 +8,68 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import axios from "axios";
+import Cookies from "universal-cookie";
+import {connect} from "react-redux";
+import { setUser } from '../redux/actions'
+import { User } from '../types/user'
 
-export class Login extends Component {
+type LoginState = {
+    errorMsg: string
+}
+
+interface LoginProps {
+    setUser: typeof setUser
+}
+
+
+class Login extends Component<LoginProps, LoginState> {
+    constructor(props: LoginProps) {
+        super(props);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+    state = {
+        errorMsg: ''
+    }
+
     handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
+
         const data = new FormData(event.currentTarget);
 
-        console.log(data);
+        const loginRequest = {
+            email: data.get('email'),
+            password: data.get('password')
+        }
+        const rememberMe = (data.get('remember') === 'remember');
+
+        axios.post(
+            process.env.REACT_APP_PLATFORM_PATH + '/users/auth',
+            loginRequest)
+            .then(response => {
+                this.setState({
+                    errorMsg: ''
+                })
+
+                this.props.setUser(response.data.user);
+
+                const cookies = new Cookies();
+                let expires = response.data.session.expires;
+                if (!rememberMe) {
+                    expires = null;
+                } else {
+                    cookies.set('sessionId', response.data.session.id);
+                }
+
+            })
+            .catch(error => {
+                if (error.response.status === 401) {
+                    this.setState({
+                        errorMsg: 'Username or password invalid'
+                    })
+                }
+               console.log(error);
+            });
     }
 
     render() {
@@ -44,6 +99,8 @@ export class Login extends Component {
                             name="email"
                             autoComplete="email"
                             autoFocus
+                            error={this.state.errorMsg !== ''}
+                            helperText={this.state.errorMsg}
                         />
                         <TextField
                             margin="normal"
@@ -54,9 +111,16 @@ export class Login extends Component {
                             type="password"
                             id="password"
                             autoComplete="current-password"
+                            error={this.state.errorMsg !== ''}
+                            helperText={this.state.errorMsg}
                         />
                         <FormControlLabel
-                            control={<Checkbox value="remember" color="primary" />}
+                            control={
+                                <Checkbox
+                                    value="remember"
+                                    name="remember"
+                                    color="primary" />
+                            }
                             label="Remember me"
                         />
                         <Button
@@ -85,3 +149,5 @@ export class Login extends Component {
         );
     }
 }
+
+export default connect(null, { setUser })(Login)

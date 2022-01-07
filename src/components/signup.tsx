@@ -9,13 +9,10 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from "axios";
 import {RedirectBackdrop} from "../RedirectBackdrop";
 
-const theme = createTheme();
-
-type SignupState = {
+interface SignupState {
     emailError: string
     firstNameError: string
     lastNameError: string
@@ -32,22 +29,6 @@ export class SignUp extends React.Component<{}, SignupState> {
         backdropOpen: false
     }
     state = this.defaultState
-
-    // validateName(value: string): boolean {
-    //     const regexp = new RegExp('^^[a-zA-Z]{2,255}$')
-    //     return regexp.test(value)
-    // }
-    //
-    // validateFirstName(event: ChangeEvent<HTMLInputElement>): void {
-    //     const value = event.currentTarget.value
-    //     const valid = this.validateName(value)
-    //
-    //     if (valid) {
-    //         this.setState({firstNameError: ''})
-    //     } else {
-    //         this.setState({firstNameError: 'Provide a valid name'})
-    //     }
-    // }
 
     handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
                 event.preventDefault();
