@@ -4,20 +4,29 @@ import Link from '@mui/material/Link';
 import {Link as RouterLink} from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import {useDispatch, useSelector} from 'react-redux';
+import {userActions} from '../store/reducers/user';
 
 const Navbar = (props) => {
+    const dispatch = useDispatch();
+    const user     = useSelector(state => state.user.user);
+
+    const logoutHandler = () => {
+        localStorage.removeItem('session');
+        localStorage.removeItem('jh-google-oauth-token');
+        dispatch(userActions.logout());
+    }
+
     let userDisplay;
 
-    if (props.user !== undefined && props.user.email) {
-        console.log(props.user);
+    if (user !== undefined && user.email) {
+        console.log(user);
         userDisplay = (
             <nav>
-                {props.user.email}
-                <Button
-                    variant="outlined"
-                    component={RouterLink}
-                    to="/users/logout"
-                    sx={{my: 1, mx: 1.5}}
+                {user.email}
+                <Button onClick={logoutHandler}
+                        variant="outlined"
+                        sx={{my: 1, mx: 1.5}}
                 >
                     Logout
                 </Button>

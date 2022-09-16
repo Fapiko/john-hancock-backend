@@ -10,12 +10,13 @@ import {Provider} from 'react-redux';
 import store from './store/store';
 import Navbar from './components/navbar';
 import Signup from './components/signup';
+import {GoogleOAuthProvider} from '@react-oauth/google';
 
 const theme = createTheme();
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <React.StrictMode>
+    <GoogleOAuthProvider clientId="834953141481-an55r41f085lol5fknij3rp5g9e8ho19.apps.googleusercontent.com">
         <Provider store={store}>
             <ThemeProvider theme={theme}>
                 <CssBaseline/>
@@ -32,6 +33,5 @@ root.render(
                 </BrowserRouter>
             </ThemeProvider>
         </Provider>
-    </React.StrictMode>,
+    </GoogleOAuthProvider>,
 );
-
