@@ -1,12 +1,15 @@
 import React, {useEffect} from 'react';
 import {Container} from '@mui/material';
 import {useDispatch, useSelector} from 'react-redux';
+import {Outlet} from 'react-router-dom';
 import {getCurrentUserFromSession, validateOauthToken} from './store/actions/user-actions';
+import {AdapterMoment} from '@mui/x-date-pickers/AdapterMoment';
+import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
 
 function App() {
-    const user             = useSelector(state => state.user.user);
-    const dispatch         = useDispatch();
-    const sessionData      = localStorage.getItem('session');
+    const user = useSelector(state => state.user.user);
+    const dispatch = useDispatch();
+    const sessionData = localStorage.getItem('session');
     const googleOauthToken = localStorage.getItem('jh-google-oauth-token');
 
     useEffect(() => {
@@ -18,7 +21,6 @@ function App() {
         // If we have a session but no user, get the user info
         if (sessionData) {
             const session = JSON.parse(sessionData);
-            console.log(session)
             dispatch(getCurrentUserFromSession(session.id));
         }
 
@@ -29,10 +31,13 @@ function App() {
     }, [user, sessionData, googleOauthToken, dispatch]);
 
     return (
-        <Container maxWidth="sm">
-            <meta name="viewport" content="initial-scale=1, width=device-width"/>
-            {/*<Link to="/users/signup"><Button variant="contained">Hello World</Button></Link>*/}
-        </Container>
+        <LocalizationProvider dateAdapter={AdapterMoment}>
+            <Container maxWidth="sm">
+                <meta name="viewport" content="initial-scale=1, width=device-width"/>
+                <Outlet/>
+                {/*<Link to="/users/signup"><Button variant="contained">Hello World</Button></Link>*/}
+            </Container>
+        </LocalizationProvider>
     );
 }
 

@@ -5,11 +5,11 @@ import {Link as RouterLink} from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import {useDispatch, useSelector} from 'react-redux';
-import {userActions} from '../store/reducers/user';
+import {userActions} from '../store/user-slice';
 
 const Navbar = (props) => {
     const dispatch = useDispatch();
-    const user     = useSelector(state => state.user.user);
+    const user = useSelector(state => state.user.user);
 
     const logoutHandler = () => {
         localStorage.removeItem('session');

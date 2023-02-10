@@ -1,15 +1,15 @@
 import axios from 'axios';
-import {userActions} from '../reducers/user';
+import {userActions} from '../user-slice';
 
 export const getCurrentUserFromSession = (sessionID) => {
     return async (dispatch) => {
         const response = await axios.get(`http://localhost:11000/user`, {
             headers: {
-                'Content-Type':  'application/json',
+                'Content-Type': 'application/json',
                 'Authorization': sessionID,
             },
         });
-        const user     = response.data;
+        const user = response.data;
         dispatch(userActions.setUser(user));
     };
 }
@@ -21,7 +21,7 @@ export const validateOauthToken = (token) => {
                 try {
                     console.log('fetching session');
                     const res = await axios.post('http://localhost:11000/oauth2/token', {
-                        provider:    'google',
+                        provider: 'google',
                         accessToken: token,
                     });
 

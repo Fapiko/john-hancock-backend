@@ -11,7 +11,6 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import axios from 'axios';
-import {RedirectBackdrop} from '../RedirectBackdrop';
 
 const initialState = {
     emailError:     '',
@@ -170,8 +169,6 @@ const Signup = (props) => {
                     </Grid>
                 </Box>
             </Box>
-            <RedirectBackdrop open={state.backdropOpen}
-                              redirectUrl={'http://www.google.com'}/>
         </Container>
     );
 }

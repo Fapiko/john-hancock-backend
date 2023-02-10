@@ -8,15 +8,20 @@ import {createTheme} from '@mui/material/styles';
 import Login from './components/login';
 import {Provider} from 'react-redux';
 import store from './store/store';
-import Navbar from './components/navbar';
+import Navbar from './components/Navbar';
 import Signup from './components/signup';
 import {GoogleOAuthProvider} from '@react-oauth/google';
+import CertAuthorities from './components/certificate-authorities/CertAuthorities';
+import {ROUTE_CA_HOME, ROUTE_CA_NEW} from './consts/routes';
+import CertAuthority from './components/certificate-authorities/CertAuthority';
+import Home from "./components/Home";
 
 const theme = createTheme();
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <GoogleOAuthProvider clientId="834953141481-an55r41f085lol5fknij3rp5g9e8ho19.apps.googleusercontent.com">
+    <GoogleOAuthProvider
+        clientId="834953141481-an55r41f085lol5fknij3rp5g9e8ho19.apps.googleusercontent.com">
         <Provider store={store}>
             <ThemeProvider theme={theme}>
                 <CssBaseline/>
@@ -26,9 +31,13 @@ root.render(
                     <Navbar/>
 
                     <Routes>
-                        <Route path="/" element={<App/>}/>
-                        <Route path="users/login" element={<Login/>}/>
-                        <Route path="users/signup" element={<Signup/>}/>
+                        <Route path="/" element={<App/>}>
+                            <Route path="" element={<Home/>}/>
+                            <Route path={ROUTE_CA_HOME} element={<CertAuthorities/>}/>
+                            <Route path={ROUTE_CA_NEW} element={<CertAuthority/>}/>
+                            <Route path="users/login" element={<Login/>}/>
+                            <Route path="users/signup" element={<Signup/>}/>
+                        </Route>
                     </Routes>
                 </BrowserRouter>
             </ThemeProvider>
