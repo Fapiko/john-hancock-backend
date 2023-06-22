@@ -1,69 +1,77 @@
-import * as React from 'react';
-import {Box, Stack} from '@mui/material';
-import Button from '@mui/material/Button';
-import InputField from '../ui/InputField';
-import {DesktopDatePicker} from "@mui/x-date-pickers";
-import moment from "moment";
-import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
-import {AdapterMoment} from "@mui/x-date-pickers/AdapterMoment";
-import TextField from "@mui/material/TextField";
+import {Link, useParams} from "react-router-dom";
+import {useEffect, useState} from "react";
 import axios from "axios";
+import moment from "moment/moment";
+import {ROUTE_CA_NEW} from "../../consts/routes";
+import {Button} from "@mui/material";
 
 const CertAuthority = () => {
-    const [expiration, setExpiration] = React.useState(moment().add(1, 'year'));
+    const [certAuthority, setCertAuthority] = useState({});
+
+    let {id} = useParams();
     const sessionData = localStorage.getItem('session');
 
-    const handleSubmit = (event) => {
+    useEffect(() => {
         const session = JSON.parse(sessionData);
 
-        event.preventDefault();
-        console.log(event);
-        axios.put(process.env.REACT_APP_PLATFORM_PATH + '/certificate-authorities', {
-            name: event.target.name.value,
-            organization: event.target.organization.value,
-            country: event.target.country.value,
-            state: event.target.state.value,
-            city: event.target.city.value,
-            postalCode: event.target.postalCode.value,
-            streetAddress: event.target.streetAddress.value,
-            expiration: expiration.toISOString(),
-        }, {
+        axios.get(process.env.REACT_APP_PLATFORM_PATH + '/certificate-authorities/' + id, {
             headers: {
                 Authorization: session.id,
             }
         })
-    }
+            .then(response => {
+                setCertAuthority(response.data);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }, [id, sessionData]);
 
-    const handleExpirationChange = (newValue) => {
-        setExpiration(newValue);
+    const issuer = certAuthority.issuer;
+    const created = moment(new Date(certAuthority.created)).format('MMMM Do YYYY, h:mm:ss a');
+
+    if (!certAuthority.issuer) {
+        return (
+            <div>
+                <h1>Not found</h1>
+            </div>
+        );
     }
 
     return (
-        <LocalizationProvider dateAdapter={AdapterMoment}>
-            <Box component="form" noValidate onSubmit={handleSubmit} sx={{mt: 3}}>
-                <Stack spacing={2}>
-                    <InputField required
-                                id="name"
-                                label="Certificate Authority Name"/>
-                    <InputField required id="organization" label="Organization"/>
-                    <InputField id="country" label="Country or Region"/>
-                    <InputField id="state" label="State or Province"/>
-                    <InputField id="city" label="Locality"/>
-                    <InputField id="postalCode" label="Postal Code"/>
-                    <InputField id="streetAddress" label="Street Address"/>
-                    <DesktopDatePicker onChange={handleExpirationChange} value={expiration}
-                                       renderInput={(params) => <TextField {...params} />}/>
-                    <Button
-                        type="submit"
-                        variant="contained"
-                        sx={{mt: 3, mb: 2}}
-                    >
-                        Create
-                    </Button>
-                </Stack>
-            </Box>
-        </LocalizationProvider>
-    )
+        <div>
+            <h1>{certAuthority.name}</h1>
+            <ul>
+                <li>{created}</li>
+                <li>CA Cert: {'' + certAuthority.isCA}</li>
+                <li>
+                    Issuer:
+                    <ul>
+                        <li>Country: {issuer.country.map((v) => (
+                            <span key={v}>{v}</span>
+                        ))}</li>
+                        <li>Organization: {issuer.organization.map((v) => (
+                            <span key={v}>{v}</span>
+                        ))}</li>
+                        <li>Locality: {issuer.locality.map((v) => (
+                            <span key={v}>{v}</span>
+                        ))}</li>
+                        <li>Postal Code: {issuer.postalCode.map((v) => (
+                            <span key={v}>{v}</span>
+                        ))}</li>
+                        <li>Province: {issuer.province.map((v) => (
+                            <span key={v}>{v}</span>
+                        ))}</li>
+                        <li>Street Address: {issuer.streetAddress.map((v) => (
+                            <span key={v}>{v}</span>
+                        ))}</li>
+                    </ul>
+                </li>
+            </ul>
+            <Link to={ROUTE_CA_NEW + '/' + certAuthority.id}><Button
+                variant="contained">Create Intermediate CA</Button></Link>
+        </div>
+    );
 }
 
 export default CertAuthority;

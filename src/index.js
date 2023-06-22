@@ -13,6 +13,7 @@ import Signup from './components/signup';
 import {GoogleOAuthProvider} from '@react-oauth/google';
 import CertAuthorities from './components/certificate-authorities/CertAuthorities';
 import {ROUTE_CA_HOME, ROUTE_CA_NEW} from './consts/routes';
+import NewCertAuthority from './components/certificate-authorities/NewCertAuthority';
 import CertAuthority from './components/certificate-authorities/CertAuthority';
 import Home from "./components/Home";
 
@@ -34,7 +35,9 @@ root.render(
                         <Route path="/" element={<App/>}>
                             <Route path="" element={<Home/>}/>
                             <Route path={ROUTE_CA_HOME} element={<CertAuthorities/>}/>
-                            <Route path={ROUTE_CA_NEW} element={<CertAuthority/>}/>
+                            <Route path={ROUTE_CA_NEW} element={<NewCertAuthority/>}/>
+                            <Route path={ROUTE_CA_NEW + '/:id'} element={<NewCertAuthority/>}/>
+                            <Route path={ROUTE_CA_HOME + '/:id'} element={<CertAuthority/>}/>
                             <Route path="users/login" element={<Login/>}/>
                             <Route path="users/signup" element={<Signup/>}/>
                         </Route>

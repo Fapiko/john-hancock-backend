@@ -2,8 +2,6 @@ import TextField from '@mui/material/TextField';
 import * as React from 'react';
 
 const InputField = (props) => {
-    console.log(props)
-
     return (
         <TextField
             required={props.required}
@@ -14,6 +12,8 @@ const InputField = (props) => {
             label={props.label}
             name={props.id}
             autoComplete={props.id}
+            value={props.value}
+            onChange={props.onChange}
         />
     );
 }

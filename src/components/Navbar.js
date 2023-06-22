@@ -20,7 +20,6 @@ const Navbar = (props) => {
     let userDisplay;
 
     if (user !== undefined && user.email) {
-        console.log(user);
         userDisplay = (
             <nav>
                 {user.email}
@@ -33,7 +32,6 @@ const Navbar = (props) => {
             </nav>
         );
     } else {
-        console.log('userdisplay');
         userDisplay = (
             <nav>
                 <Button
