@@ -1,11 +1,11 @@
-import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import InputField from '../ui/InputField';
 import axios from 'axios';
-import { ROUTE_CA_HOME } from '../../consts/routes';
+import { ROUTE_KEYS } from '../../consts/routes';
 import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
+import SelectField from '../ui/SelectField';
 
 const NewPrivateKey = () => {
 	var navigate = useNavigate();
@@ -23,6 +23,7 @@ const NewPrivateKey = () => {
 
 	const handleSubmit = (e) => {
 		const session = JSON.parse(sessionData);
+		console.log(keyAlgorithm);
 
 		e.preventDefault();
 		axios
@@ -31,7 +32,7 @@ const NewPrivateKey = () => {
 				{
 					name: e.target.name.value,
 					algorithm: parseInt(keyAlgorithm),
-					passowrd: e.target.password.value,
+					password: e.target.password.value,
 				},
 				{
 					headers: {
@@ -40,7 +41,7 @@ const NewPrivateKey = () => {
 				}
 			)
 			.then((response) => {
-				navigate(ROUTE_CA_HOME);
+				navigate(ROUTE_KEYS);
 			});
 	};
 
@@ -54,24 +55,13 @@ const NewPrivateKey = () => {
 					type={'text'}
 					placeholder={'Name'}
 				/>
-				<FormControl fullWidth>
-					<InputLabel id={'select-key-algorithm-label'}>
-						Key Algorithm
-					</InputLabel>
-					<Select
-						labelId={'select-key-algorithm-label'}
-						id={'select-key-algorithm'}
-						value={keyAlgorithm}
-						label={'Key Algorithm'}
-						onChange={(e) => setKeyAlgorithm(e.target.value)}
-					>
-						{Object.keys(keyAlgorithms).map((keyName) => (
-							<MenuItem key={keyName} value={keyName}>
-								{keyAlgorithms[keyName]}
-							</MenuItem>
-						))}
-					</Select>
-				</FormControl>
+				<SelectField
+					label={'Key Algorithm'}
+					id={'keyAlgorithm'}
+					value={keyAlgorithm}
+					onChange={setKeyAlgorithm}
+					options={keyAlgorithms}
+				/>
 				<InputField
 					label={'Password'}
 					type={'password'}

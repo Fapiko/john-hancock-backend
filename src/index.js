@@ -17,12 +17,14 @@ import {
 	ROUTE_CA_NEW,
 	ROUTE_CERT_NEW,
 	ROUTE_KEY_NEW,
+	ROUTE_KEYS,
 } from './consts/routes';
 import NewCertAuthority from './components/certificate-authorities/NewCertAuthority';
 import CertAuthority from './components/certificate-authorities/CertAuthority';
 import Home from './components/Home';
 import NewCertificate from './components/certificates/NewCertificate';
 import NewPrivateKey from './components/keys/NewPrivateKey';
+import Keys from './components/keys/Keys';
 
 const theme = createTheme();
 
@@ -68,6 +70,7 @@ root.render(
 								path={ROUTE_KEY_NEW}
 								element={<NewPrivateKey />}
 							/>
+							<Route path={ROUTE_KEYS} element={<Keys />} />
 							<Route path="users/login" element={<Login />} />
 							<Route path="users/signup" element={<Signup />} />
 						</Route>

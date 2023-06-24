@@ -16,7 +16,7 @@ const InputField = (props) => {
 				name={props.id}
 				autoComplete={props.id}
 				value={props.value}
-				onChange={props.onChange}
+				onChange={props.onChange ? props.onChange : () => {}}
 				type={props.type ? props.type : 'text'}
 			/>
 		</FormControl>
