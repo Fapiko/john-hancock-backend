@@ -39,7 +39,8 @@ const Certificate = () => {
 			process.env.REACT_APP_PLATFORM_PATH +
 			'/certificates/' +
 			certId +
-			'/download';
+			'/download?format=' +
+			format;
 
 		authenticatedDownload(path, session.id);
 	};
