@@ -2,10 +2,16 @@ import { Link, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import moment from 'moment/moment';
-import { ROUTE_CA_NEW, ROUTE_CERT_NEW } from '../../consts/routes';
+import {
+	ROUTE_CA_HOME,
+	ROUTE_CA_NEW,
+	ROUTE_CERT_NEW,
+} from '../../consts/routes';
 import { Button } from '@mui/material';
+import authenticatedDownload from '../../utils/authenticatedDownload';
 
 const CertAuthority = () => {
+	const [certs, setCerts] = useState({});
 	const [certAuthority, setCertAuthority] = useState({});
 
 	let { id } = useParams();
@@ -31,7 +37,39 @@ const CertAuthority = () => {
 			.catch((error) => {
 				console.log(error);
 			});
+
+		axios
+			.get(
+				process.env.REACT_APP_PLATFORM_PATH +
+					'/certificate-authorities/' +
+					id +
+					'/certificates',
+				{
+					headers: {
+						Authorization: session.id,
+					},
+				}
+			)
+			.then((response) => {
+				setCerts(response.data);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
 	}, [id, sessionData]);
+
+	const handleDownload = (format) => {
+		const session = JSON.parse(sessionData);
+
+		const path =
+			process.env.REACT_APP_PLATFORM_PATH +
+			'/certificates/' +
+			id +
+			'/download?format=' +
+			format;
+
+		authenticatedDownload(path, session.id);
+	};
 
 	const issuer = certAuthority.issuer;
 	const created = moment(new Date(certAuthority.created)).format(
@@ -95,19 +133,35 @@ const CertAuthority = () => {
 				</li>
 			</ul>
 			<div>
-				<span>
-					<Link to={ROUTE_CA_NEW + '/' + certAuthority.id}>
-						<Button variant="contained">
-							Create Intermediate CA
-						</Button>
-					</Link>
-				</span>
-				<span>
-					<Link to={ROUTE_CERT_NEW + '/' + certAuthority.id}>
-						<Button variant="contained">Create Certificate</Button>
-					</Link>
-				</span>
+				<Link to={ROUTE_CA_NEW + '/' + certAuthority.id}>
+					<Button variant="contained">Create Intermediate CA</Button>
+				</Link>
+				<Link to={ROUTE_CERT_NEW + '/' + certAuthority.id}>
+					<Button variant="contained">Create Certificate</Button>
+				</Link>
+				<Button
+					onClick={() => handleDownload('PEM')}
+					variant="contained"
+				>
+					Download PEM
+				</Button>
 			</div>
+			<h2>Certificates</h2>
+			{certs.map((cert) => (
+				<div key={cert.id}>
+					<Link
+						to={
+							ROUTE_CA_HOME +
+							'/' +
+							certAuthority.id +
+							'/certificates/' +
+							cert.id
+						}
+					>
+						{cert.name}
+					</Link>
+				</div>
+			))}
 		</div>
 	);
 };

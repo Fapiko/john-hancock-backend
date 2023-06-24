@@ -25,6 +25,7 @@ import Home from './components/Home';
 import NewCertificate from './components/certificates/NewCertificate';
 import NewPrivateKey from './components/keys/NewPrivateKey';
 import Keys from './components/keys/Keys';
+import Certificate from './components/certificates/Certificate';
 
 const theme = createTheme();
 
@@ -70,8 +71,14 @@ root.render(
 								path={ROUTE_KEY_NEW}
 								element={<NewPrivateKey />}
 							/>
-							<Route path={ROUTE_CA_HOME + '/:caId/:certId'} />
 							<Route path={ROUTE_KEYS} element={<Keys />} />
+							<Route
+								path={
+									ROUTE_CA_HOME +
+									'/:caId/certificates/:certId'
+								}
+								element={<Certificate />}
+							/>
 							<Route path="users/login" element={<Login />} />
 							<Route path="users/signup" element={<Signup />} />
 						</Route>
