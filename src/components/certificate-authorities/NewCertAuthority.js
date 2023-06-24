@@ -78,7 +78,6 @@ const NewCertAuthority = () => {
 	const handleSubmit = (event) => {
 		const session = JSON.parse(sessionData);
 
-		console.log(key);
 		event.preventDefault();
 		axios
 			.put(

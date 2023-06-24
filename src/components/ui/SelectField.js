@@ -21,7 +21,11 @@ const SelectField = (props) => {
 				onChange={(e) => onChangeValue(e.target.value)}
 			>
 				{Object.keys(props.options).map((key) => (
-					<MenuItem key={key} value={key}>
+					<MenuItem
+						key={key}
+						value={key}
+						selected={key === props.value}
+					>
 						{props.options[key]}
 					</MenuItem>
 				))}

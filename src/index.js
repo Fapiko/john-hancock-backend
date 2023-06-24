@@ -70,6 +70,7 @@ root.render(
 								path={ROUTE_KEY_NEW}
 								element={<NewPrivateKey />}
 							/>
+							<Route path={ROUTE_CA_HOME + '/:caId/:certId'} />
 							<Route path={ROUTE_KEYS} element={<Keys />} />
 							<Route path="users/login" element={<Login />} />
 							<Route path="users/signup" element={<Signup />} />
