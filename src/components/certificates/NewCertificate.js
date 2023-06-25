@@ -10,74 +10,13 @@ import * as React from 'react';
 import { useState } from 'react';
 import moment from 'moment/moment';
 import { DesktopDatePicker } from '@mui/x-date-pickers';
-
-const certTypes = [
-	{
-		id: 'any',
-		label: 'Any',
-	},
-	{
-		id: 'digitalSignature',
-		label: 'Digital Signature',
-	},
-	{
-		id: 'contentCommitment',
-		label: 'Content Commitment (Non-Repudiation)',
-	},
-	{
-		id: 'keyEncipherment',
-		label: 'Key Encipherment',
-	},
-	{
-		id: 'keyAgreement',
-		label: 'Key Agreement',
-	},
-	{
-		id: 'certSign',
-		label: 'Certificate Signing',
-	},
-	{
-		id: 'crlSign',
-		label: 'Certificate Revokation List Signing',
-	},
-	{
-		id: 'encipherOnly',
-		label: 'Encipher Only',
-	},
-	{
-		id: 'decipherOnly',
-		label: 'Decipher Only',
-	},
-	{
-		id: 'serverAuth',
-		label: 'Server Auth',
-	},
-	{
-		id: 'clientAuth',
-		label: 'Client Auth',
-	},
-	{
-		id: 'codeSigning',
-		label: 'Code Signing',
-	},
-	{
-		id: 'emailProtection',
-		label: 'Email Protection',
-	},
-	{
-		id: 'timeStamping',
-		label: 'Time Stamping',
-	},
-	{
-		id: 'ocspSigning',
-		label: 'OCSP Signing',
-	},
-];
+import { keyUsageValues } from '../../consts/keyUsages';
 
 const NewCertificate = () => {
 	const [key, setKey] = useState('');
 	const [keyUsages, setKeyUsages] = useState([]);
 	const [expiration, setExpiration] = useState(moment().add(1, 'year'));
+	const [sans, setSans] = useState([]);
 	const sessionData = localStorage.getItem('session');
 	var navigate = useNavigate();
 	let { caId } = useParams();
@@ -99,7 +38,7 @@ const NewCertificate = () => {
 					caKeyPassword: e.target.caKeyPassword.value,
 					keyUsages: keyUsages,
 					commonName: e.target.commonName.value,
-					san: e.target.san.value,
+					subjectAlternativeNames: sans,
 					expiration: expiration,
 				},
 				{
@@ -109,7 +48,7 @@ const NewCertificate = () => {
 				}
 			)
 			.then(() => {
-				navigate(ROUTE_CA_HOME);
+				navigate(ROUTE_CA_HOME + '/' + caId);
 			})
 			.catch((err) => {
 				console.log(err);
@@ -132,14 +71,15 @@ const NewCertificate = () => {
 						onChange={setKey}
 					/>
 					<InputField
-						label={'CA Key Password'}
+						label={'Certificate Authority Private Key Password'}
 						id={'caKeyPassword'}
+						type={'password'}
 					/>
 					<Autocomplete
 						multiple
 						label={'Key Usages'}
 						id={'keyUsages'}
-						options={certTypes}
+						options={keyUsageValues}
 						isOptionEqualToValue={(option, value) =>
 							option.id === value.id
 						}
@@ -166,6 +106,9 @@ const NewCertificate = () => {
 						id={'san'}
 						freeSolo
 						options={[]}
+						onChange={(event, newValue) => {
+							setSans(newValue);
+						}}
 						renderInput={(params) => (
 							<TextField
 								{...params}

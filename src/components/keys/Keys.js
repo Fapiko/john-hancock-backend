@@ -4,6 +4,8 @@ import Button from '@mui/material/Button';
 import { ROUTE_KEY_NEW } from '../../consts/routes';
 import { Link } from 'react-router-dom';
 import authenticatedDownload from '../../utils/authenticatedDownload';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 
 const Keys = () => {
 	const [keys, setKeys] = useState([]);
@@ -37,25 +39,43 @@ const Keys = () => {
 	};
 
 	return (
-		<div>
+		<>
 			<h1>Keys</h1>
 			<ul>
 				{keys.map((key) => (
 					<li key={key.id}>
-						{key.name}
-						<Button
-							onClick={() => handleDownload(key.id, 'pem')}
-							variant="contained"
-						>
-							Download PEM
-						</Button>
+						<Grid container>
+							<Grid
+								sx={{
+									display: 'flex',
+									alignItems: 'center',
+								}}
+								item
+								xs={8}
+							>
+								<Typography alignItems={'center'}>
+									{key.name}
+								</Typography>
+							</Grid>
+							<Grid item xs={4}>
+								<Button
+									sx={{ margin: 1 }}
+									onClick={() =>
+										handleDownload(key.id, 'pem')
+									}
+									variant="contained"
+								>
+									Download PEM
+								</Button>
+							</Grid>
+						</Grid>
 					</li>
 				))}
 			</ul>
 			<Link to={ROUTE_KEY_NEW}>
 				<Button variant="contained">Create</Button>
 			</Link>
-		</div>
+		</>
 	);
 };
 

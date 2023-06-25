@@ -11,7 +11,7 @@ import { Button } from '@mui/material';
 import authenticatedDownload from '../../utils/authenticatedDownload';
 
 const CertAuthority = () => {
-	const [certs, setCerts] = useState({});
+	const [certs, setCerts] = useState([]);
 	const [certAuthority, setCertAuthority] = useState({});
 
 	let { id } = useParams();
@@ -147,21 +147,22 @@ const CertAuthority = () => {
 				</Button>
 			</div>
 			<h2>Certificates</h2>
-			{certs.map((cert) => (
-				<div key={cert.id}>
-					<Link
-						to={
-							ROUTE_CA_HOME +
-							'/' +
-							certAuthority.id +
-							'/certificates/' +
-							cert.id
-						}
-					>
-						{cert.name}
-					</Link>
-				</div>
-			))}
+			{certs &&
+				certs.map((cert) => (
+					<div key={cert.id}>
+						<Link
+							to={
+								ROUTE_CA_HOME +
+								'/' +
+								certAuthority.id +
+								'/certificates/' +
+								cert.id
+							}
+						>
+							{cert.name}
+						</Link>
+					</div>
+				))}
 		</div>
 	);
 };

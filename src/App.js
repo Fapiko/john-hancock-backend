@@ -42,7 +42,6 @@ function App() {
 					content="initial-scale=1, width=device-width"
 				/>
 				<Outlet />
-				{/*<Link to="/users/signup"><Button variant="contained">Hello World</Button></Link>*/}
 			</Container>
 		</LocalizationProvider>
 	);
