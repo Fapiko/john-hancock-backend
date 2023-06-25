@@ -137,9 +137,12 @@ const CertAuthority = () => {
 					<Button variant="contained">Create Intermediate CA</Button>
 				</Link>
 				<Link to={ROUTE_CERT_NEW + '/' + certAuthority.id}>
-					<Button variant="contained">Create Certificate</Button>
+					<Button sx={{ m: 1 }} variant="contained">
+						Create Certificate
+					</Button>
 				</Link>
 				<Button
+					sx={{ m: 1 }}
 					onClick={() => handleDownload('PEM')}
 					variant="contained"
 				>

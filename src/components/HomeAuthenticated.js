@@ -6,6 +6,7 @@ const HomeAuthenticated = (props) => {
 	return (
 		<>
 			<Button
+				sx={{ m: 1 }}
 				variant="contained"
 				color="primary"
 				component={RouterLink}
